@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {cache} = require("./../middleware/cacheMiddleware");
+const {cache, clearAll} = require("./../middleware/cacheMiddleware");
 const validationMiddleware = require("./../middleware/validationMiddleware");
 const {getMarketData,getCoinMarketChart,getCoinById} = require('./../controllers/controller');
 

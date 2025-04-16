@@ -1,12 +1,29 @@
 const redisClient = require('../config/redisClient');
 
 const keyGenerator = (req) => {
-  if (req.path === "/all") return "allCoins";
-  if (req.path === "/top-gainer") return "topGainer";
-  if (req.path === "/top-loser") return "topLoser";
-  if (req.path.endsWith("/market-chart")) return `${req.params.id}_marketChart`;
-  if (req.params.id) return `coin_${req.params.id}`;
-  return req.originalUrl;
+  const { vs_currency, order, per_page, page } = req.query;
+  let key = '';
+    // For getMarketData (All, Top Gainer, Top Loser)
+    if (req.path === "/") {
+      key = `getMarketData_${vs_currency}_${order}_${per_page}_${page}`;
+    }
+  
+    // For Coin Market Chart
+    if (req.path.endsWith("/market-chart")) {
+      key = `${req.params.id}_marketChart_${vs_currency}_${days}`;
+    }
+  
+    // For Coin By ID
+    if (req.params.id) {
+      key = `coin_${req.params.id}_${vs_currency}`;
+    }
+  
+    // Default case, use the original URL as fallback
+    if (!key) {
+      key = req.originalUrl;
+    }
+  
+    return key;
 };
 
 const cache = () => async (req, res, next) => {
@@ -18,9 +35,11 @@ const cache = () => async (req, res, next) => {
 };
 
 const setCache = async (key, data, expiration = 60) => {
-  await redisClient.setex(key, expiration, JSON.stringify(data));
+  await redisClient.set(key, JSON.stringify(data),'EX', 60);
 };
 
+const clearAll = async()=>{
+  await redisClient.flushDb();    
+}
 
-
-module.exports = {cache,setCache};
+module.exports = {cache,setCache,clearAll};

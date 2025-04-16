@@ -4,16 +4,18 @@ const {setCache} = require('./../middleware/cacheMiddleware');
 const api_url = process.env.API_URL;
 const api_key = process.env.API_KEY
 const getMarketData = async(req,res)=>{
-    const { vs_currency, order, per_page, page } = req.query;
+    const { vs_currency="usd", order="desc", per_page=1, page=1 } = req.query;
+    console.log(`${api_url}/markets?vs_currency=${vs_currency}&per_page=${per_page}&page=${page}`,'x-cg-demo-api-key',api_key);
 
     const response = await axios({
-        URL:`${api_url}/markets?vs_currency=${vs_currency}&order=${order}&per_page=${per_page}&page=${page}`,
+        url:`${api_url}/markets?vs_currency=${vs_currency}&per_page=${per_page}&page=${page}`,
         method:"get",
         headers:{
-            "x-cg-demo-api-key":api_key
+            'x-cg-demo-api-key':api_key
         } 
       });
     await setCache(res.locals.cacheKey, response.data);
+
     return res.json(response.data);  
 }
 
