@@ -17,4 +17,10 @@ const cache = () => async (req, res, next) => {
   next();
 };
 
-module.exports = cache;
+const setCache = async (key, data, expiration = 60) => {
+  await redisClient.setex(key, expiration, JSON.stringify(data));
+};
+
+
+
+module.exports = {cache,setCache};

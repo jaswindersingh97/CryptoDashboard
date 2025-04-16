@@ -17,7 +17,16 @@ const schemas = {
       vs_currency: Joi.string().valid("usd").default("usd"),
       days: Joi.string().valid("7", "14", "30").default("7"),
     })
+  },
+  getCoinById:{
+    params: Joi.object({
+      id: Joi.string().required()
+    }),
+    query: Joi.object({
+      vs_currency: Joi.string().valid("usd").default("usd"),
+    })
   }
+
 };
 
 module.exports = schemas;
