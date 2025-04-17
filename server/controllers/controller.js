@@ -30,6 +30,7 @@ const getCoinMarketChart = async(req,res)=>{
           "x-cg-demo-api-key": api_key
         }
       });
+      
       await setCache(res.locals.cacheKey, response.data);
       res.json(response.data);  
 }

@@ -1,7 +1,7 @@
 const redisClient = require('../config/redisClient');
 
 const keyGenerator = (req) => {
-  const { vs_currency, order, per_page, page } = req.query;
+  const { vs_currency, order, per_page, page,days } = req.query;
   let key = '';
     // For getMarketData (All, Top Gainer, Top Loser)
     if (req.path === "/") {
@@ -29,13 +29,15 @@ const keyGenerator = (req) => {
 const cache = () => async (req, res, next) => {
   const key = keyGenerator(req);
   const cachedData = await redisClient.get(key);
-  if (cachedData) return res.json(JSON.parse(cachedData));
+  if (cachedData){
+    console.log("used cached data");   
+    return res.json(JSON.parse(cachedData));}
   res.locals.cacheKey = key;
   next();
 };
 
 const setCache = async (key, data, expiration = 60) => {
-  await redisClient.set(key, JSON.stringify(data),'EX', 60);
+  await redisClient.set(key, JSON.stringify(data),'EX', expiration);
 };
 
 const clearAll = async()=>{

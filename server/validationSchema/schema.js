@@ -77,7 +77,7 @@ const schemas = {
     }),
     query: Joi.object({
       vs_currency: Joi.string().valid("usd").default("usd"),
-      days: Joi.string().valid("7", "14", "30").default("7"),
+      days: Joi.string().valid("1","7", "14", "30").default("7"),
     })
   },
   getCoinById:{
