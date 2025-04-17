@@ -1,13 +1,15 @@
 import React from 'react'
-import Home from './pages/Home'
-import BiaxialGraph from './components/BiaxialGraph/BiaxialGraph'
-import StickyHeadTable from './components/CoinsList/CoinsList'
- 
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Home from './pages/Home/Home'
+import Dashboard from './pages/Dashboard/Dashboard'
 function App() {
   return (
-    <div style={{width:"1000px", height:"400px"}}>
-    <StickyHeadTable/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/:id' element={<Dashboard/>}/>  
+      </Routes>
+    </BrowserRouter>
   )
 }
 

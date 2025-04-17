@@ -9,7 +9,7 @@ const convertToChartData = (raw, days = 1) => {
 
   const grouped = {};
 
-  raw.prices.forEach(([timestamp, price], i) => {
+  raw?.prices?.forEach(([timestamp, price], i) => {
     const periodKey = Math.floor(timestamp / periodMs) * periodMs;
 
     if (!grouped[periodKey]) {
