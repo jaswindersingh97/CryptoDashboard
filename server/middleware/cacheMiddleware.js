@@ -37,7 +37,7 @@ const cache = () => async (req, res, next) => {
 };
 
 const setCache = async (key, data, expiration = 60) => {
-  await redisClient.set(key, JSON.stringify(data),'EX', expiration);
+  await redisClient.set(key, JSON.stringify(data), { EX: expiration });
 };
 
 const clearAll = async()=>{

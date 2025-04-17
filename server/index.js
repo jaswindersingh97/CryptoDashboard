@@ -19,11 +19,22 @@ const errorHandler = require('./middleware/errorHandler');
 app.use(errorHandler);
 
 const apiEndpoints = require('./endpoints/apiEndpoints');
+const { clearAll } = require("./middleware/cacheMiddleware");
 app.use("/api/coins",apiEndpoints);
 
 app.get("/ping",(req,res)=>{
     res.send("Hello World");
 });
+
+app.get("/clear",(req,res)=>{
+    try{clearAll()
+        console.log("done")
+        res.send("done");
+    }
+    catch(error){
+        res.send(error)
+    }
+})
 
 const port = process.env.PORT;
 app.listen(port,()=>console.log("server is running on port:",port));
