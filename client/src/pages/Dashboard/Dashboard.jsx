@@ -13,7 +13,7 @@ const Dashboard = () => {
   }, [data, period]);
   
   return (
-    <div>
+    <div style={{display:"flex", padding:"20px", width:"100vh ", flexDirection:"column"}}>
       <h1>Coin Detail: {id}</h1>
       <VolumeMarketCapChart data={transformedData}/>
       {/* <CandleChart /> */}

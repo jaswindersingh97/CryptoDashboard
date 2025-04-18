@@ -1,83 +1,125 @@
 import React, { useEffect, useRef } from 'react';
-import { createChart, CrosshairMode } from 'lightweight-charts';
+import { createChart, CrosshairMode ,CandlestickSeries,HistogramSeries } from 'lightweight-charts';
 
 const CandleChart = ({ data }) => {
   const chartContainerRef = useRef();
   const chart = useRef(null);
+  const candleSeries = useRef(null);
+  const volumeSeries = useRef(null);
 
   useEffect(() => {
-    if (chartContainerRef.current && !chart.current) {
-      chart.current = createChart(chartContainerRef.current, {
-        width: chartContainerRef.current.clientWidth,
-        height: chartContainerRef.current.clientHeight,
-        layout: {
-          backgroundColor: '#253248',
-          textColor: 'rgba(0, 0, 0, 0.9)',
+    // Initialize chart
+    chart.current = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: chartContainerRef.current.clientHeight,
+      layout: {
+        backgroundColor: '#253248',
+        textColor: 'rgba(255, 255, 255, 0.9)',
+      },
+      grid: {
+        vertLines: { color: '#334158' },
+        horzLines: { color: '#334158' },
+      },
+      crosshair: { 
+        mode: CrosshairMode.Normal,
+        vertLine: {
+          width: 4,
+          color: '#C3BCDB44',
+          style: 0,
+          labelBackgroundColor: '#9B7DFF',
         },
-        grid: {
-          vertLines: { color: '#334158' },
-          horzLines: { color: '#334158' },
+        horzLine: {
+          color: '#C3BCDB',
+          labelBackgroundColor: '#9B7DFF',
         },
-        crosshair: { mode: CrosshairMode.Normal },
-        priceScale: { borderColor: '#485c7b' },
-        timeScale: { borderColor: '#485c7b' },
-      });
-      console.log('Chart initialized:', chart.current); // Debugging
-    }
+      },
+      priceScale: {
+        borderColor: '#485c7b',
+      },
+      timeScale: {
+        borderColor: '#485c7b',
+        timeVisible: true,
+        secondsVisible: false,
+      },
+    });
+
+    // Correctly create candlestick series using addSeries()
+    candleSeries.current = chart.current.addSeries(CandlestickSeries , {
+      upColor: '#4bffb5',
+      downColor: '#ff4976',
+      borderDownColor: '#ff4976',
+      borderUpColor: '#4bffb5',
+      wickDownColor: '#838ca1',
+      wickUpColor: '#838ca1',
+    });
+
+    // Create volume series
+    volumeSeries.current = chart.current.addSeries(HistogramSeries, {
+      color: '#182233',
+      lineWidth: 2,
+      priceFormat: { type: 'volume' },
+      overlay: true,
+      scaleMargins: { top: 0.8, bottom: 0 },
+    });
+
+    return () => {
+      if (chart.current) {
+        chart.current.remove();
+        chart.current = null;
+      }
+    };
   }, []);
 
-  // Update chart data once the data is available
+  // Update chart data
   useEffect(() => {
-    if (data.length>0 && chart.current) {
-        console.log(data)
-      console.log('Transformed Data:', data);
+    if (!chart.current || !data || data.length === 0) return;
 
-      // Add the candlestick series to the chart only if it hasn't been added yet
-      if (!chart.current.candleSeries) {
-        chart.current.candleSeries = chart.current.addCandlestickSeries({
-          upColor: '#4bffb5',
-          downColor: '#ff4976',
-          borderDownColor: '#ff4976',
-          borderUpColor: '#4bffb5',
-          wickDownColor: '#838ca1',
-          wickUpColor: '#838ca1',
-        });
-      }
+    try {
+      // Format candle data
+      const formattedData = data.map(item => {
+        const timeValue = item.time || (item.date ? new Date(item.date).getTime() / 1000 : null);
+        if (!timeValue) return null;
+        
+        return {
+          time: timeValue,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          close: item.close,
+          volume: item.volume
+        };
+      }).filter(Boolean);
 
-      // Set the candlestick data
-      chart.current.candleSeries.setData(data);
-
-      // Add the volume series
-      if (!chart.current.volumeSeries) {
-        chart.current.volumeSeries = chart.current.addHistogramSeries({
-          color: '#182233',
-          lineWidth: 2,
-          priceFormat: { type: 'volume' },
-          overlay: true,
-          scaleMargins: { top: 0.8, bottom: 0 },
-        });
-      }
-
-      // Set volume data (for the bar chart)
-      chart.current.volumeSeries.setData(
-        data.map(item => ({
-          time: new Date(item.date).getTime() / 1000,  // Convert to Unix timestamp
+      if (formattedData.length > 0) {
+        candleSeries.current.setData(formattedData);
+        
+        // Format volume data
+        const volumeData = formattedData.map(item => ({
+          time: item.time,
           value: item.volume,
-        }))
-      );
+          color: item.close >= item.open ? 'rgba(75, 255, 181, 0.8)' : 'rgba(255, 73, 118, 0.8)',
+        }));
+        
+        volumeSeries.current.setData(volumeData);
+        chart.current.timeScale().fitContent();
+      }
+    } catch (error) {
+      console.error('Error updating chart data:', error);
     }
   }, [data]);
 
-  // Resize chart on container resizes
+  // Handle resize
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      const { width, height } = entries[0].contentRect;
-      chart.current.applyOptions({ width, height });
-      setTimeout(() => {
-        chart.current.timeScale().fitContent();
-      }, 0);
-    });
+    const handleResize = () => {
+      if (chart.current && chartContainerRef.current) {
+        chart.current.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+          height: chartContainerRef.current.clientHeight,
+        });
+      }
+    };
 
+    const resizeObserver = new ResizeObserver(handleResize);
     if (chartContainerRef.current) {
       resizeObserver.observe(chartContainerRef.current);
     }
@@ -88,7 +130,11 @@ const CandleChart = ({ data }) => {
   return (
     <div
       ref={chartContainerRef}
-      style={{ position: 'relative', height: '500px', width: '100%' }}
+      style={{
+        width: '100%',
+        height: '500px', // Fixed height or use 100% in a container with defined height
+        position: 'relative',
+      }}
     />
   );
 };
