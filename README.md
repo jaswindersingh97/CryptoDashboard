@@ -29,8 +29,8 @@ A real-time cryptocurrency dashboard with candlestick charts, volume and market 
 ## 🧪 Getting Started
 
 ```bash
-git clone https://github.com/your-username/crypto-dashboard.git
-cd crypto-dashboard
+git clone https://github.com/jaswindersingh97/CryptoDashboard.git
+cd client
 npm install
 npm run dev
 🔑 Environment Variables
