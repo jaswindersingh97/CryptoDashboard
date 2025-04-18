@@ -1,27 +1,58 @@
 import React , {useMemo, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useMarketChartData } from '../../hooks/useMarketChartData';
 import {convertToChartData} from './../../utils/convertToChartData2';
 import VolumeMarketCapChart from '../../components/Graphs/VolumeMarketCapChart/VolumeMarketCapChart';
 import CandleChart from '../../components/Graphs/CandleChart/CandleChart';
+import './Dashboard.css'
+import TopLAndG from '../../components/TopLAndG/TopLAndG';
 const Dashboard = () => {
   const { id } = useParams(); // Grab the coin's id from the URL
-  const [period, setPeriod] = useState(1)
-  const { data, isLoading, error } = useMarketChartData(id, 'usd', period);
+  const [days, setdays] = useState(1)
+  const { data, isLoading, error } = useMarketChartData(id, 'usd', days);
   const transformedData = useMemo(() => {
-    return data ? convertToChartData(data, period) : [];
-  }, [data, period]);
-  
+    return data ? convertToChartData(data, days) : [];
+  }, [data, days]);
+  const daysList = [
+    {value:1,Label:"24hrs"},
+    {value:7,Label:"7 days"},
+    {value:14,Label:"14 days"},
+    {value:30,Label:"30 days"}
+  ]
   return (
-    <div style={{display:"flex", padding:"20px", width:"100vh ", flexDirection:"column"}}>
-      <h1>Coin Detail: {id}</h1>
-      <VolumeMarketCapChart data={transformedData}/>
-      {/* <CandleChart /> */}
-      <CandleChart data={transformedData} />
+    <div className="container">
+      <div className="heading">
+        <Link to={"/"}><h1>Bitcoins</h1></Link>
+        <h2>Coin Detail: {id}</h2>
+      </div>
+      <div className='body'>
+        <div className='left'>
+          <div className="dropdown-container">
+            <select onChange={(e) => setdays(e.target.value)} className="dropdown">
+              {daysList.map((item) => (
+                <option key={item.Label} value={item.value}>
+                  {item.Label}
+                </option>
+              ))}
+            </select>
+          </div>
+      <div className="charts-wrapper">
+        <div className="chart-card">
+          <CandleChart data={transformedData} isLoading={isLoading} />
+        </div>
+        <div className="chart-card">
+          <VolumeMarketCapChart data={transformedData} isLoading={isLoading} />
+        </div>
+      </div>
+      </div>
+      <div className='right'>
+        <TopLAndG/>
+      </div>
+      </div>
 
-      {/* Render the coin details based on the id */}
     </div>
   );
+  
 };
 
 export default Dashboard;

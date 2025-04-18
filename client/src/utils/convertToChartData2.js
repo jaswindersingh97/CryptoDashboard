@@ -29,6 +29,7 @@ const convertToChartData = (raw, days = 1) => {
   return Object.entries(grouped).map(([_, group]) => {
     const prices = group.prices;
     return {
+      // date: days != 1 ?new Date(group.timestamp).toISOString():new Date(group.timestamp).toLocaleTimeString(),
       date: new Date(group.timestamp).toISOString(),
       open: prices[0],
       high: Math.max(...prices),

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCoinList } from './../../hooks/useCoinList.js';
 import CoinsList from '../../components/CoinsList/CoinsList.jsx';
+import TopLAndG from '../../components/TopLAndG/TopLAndG.jsx';
 
 // Hardcoded total coin count
 const TOTAL_COINS = 17100;
@@ -84,7 +85,10 @@ function Home() {
   };
 
   return (
-    <div>
+    <div className='container'>
+    <Link to={"/"}><h1>Bitcoins</h1></Link>
+    <TopLAndG/>
+
       <CoinsList
         rows={coins}
         page={page}

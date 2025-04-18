@@ -12,7 +12,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+#root{
+  width: 100vw;
+  min-height: 100vh;
+}
+*{
+  /* border: 1px,red,solid; */
+}
 a {
   font-weight: 500;
   color: #646cff;
