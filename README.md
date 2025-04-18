@@ -26,16 +26,6 @@ A real-time cryptocurrency dashboard with candlestick charts, volume and market 
 
 ---
 
-## 🧱 Project Structure
-
-src/ ├── components/ │ ├── CandleChart.jsx │ ├── VolumeMarketCapChart.jsx ├── hooks/ │ └── useMarketChartData.js ├── utils/ │ └── convertToChartData.js ├── pages/ │ └── CoinDetails.jsx └── App.jsx
-
-yaml
-Copy
-Edit
-
----
-
 ## 🧪 Getting Started
 
 ```bash
@@ -49,9 +39,9 @@ Create a .env file:
 env
 Copy
 Edit
-VITE_API_URL=https://api.coingecko.com/api/v3
+VITE_API_URL=https://cryptodashboard-zfb3.onrender.com/
 🔗 Live Demo
-Deployed Link: Add your deployed link here
+Deployed Link: https://crypto-dashboard-nine-ashy.vercel.app/
 
 📜 License
 This project uses only the open-source-compatible features of all libraries. However, note that devextreme-react may show license prompts in some cases — consider using lightweight-charts if a fully open-source stack is required.
