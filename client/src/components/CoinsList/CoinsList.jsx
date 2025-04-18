@@ -33,7 +33,7 @@ export default function CoinsList({
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const filteredRows = rows.filter((row) =>
+  const filteredRows = rows?.filter((row) =>
     `${row.name} ${row.symbol}`.toLowerCase().includes(debouncedTerm.toLowerCase())
   );
 
@@ -108,7 +108,7 @@ export default function CoinsList({
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100, 250]}
         component="div"
-        count={filteredRows.length}
+        count={filteredRows?.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(_, newPage) => onPageChange(newPage)}

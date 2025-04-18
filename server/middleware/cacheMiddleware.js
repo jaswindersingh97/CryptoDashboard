@@ -12,7 +12,10 @@ const keyGenerator = (req) => {
     if (req.path.endsWith("/market-chart")) {
       key = `${req.params.id}_marketChart_${vs_currency}_${days}`;
     }
-  
+
+    if (req.path.endsWith("/top_gainers_losers")) {
+      key = `${req.params.id}_marketChart_${vs_currency}_${days}`;
+    }
     // For Coin By ID
     if (req.params.id) {
       key = `coin_${req.params.id}_${vs_currency}`;

@@ -15,6 +15,7 @@
     background-color:rgba(192, 218, 255, 0.095);
     border-radius: 10px;
     padding: 10px;
+    gap: 10px;
   }
   .left{
     width: 50%;

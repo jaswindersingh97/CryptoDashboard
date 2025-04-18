@@ -66,7 +66,7 @@ const schemas = {
   getMarketData: {
     query: Joi.object({
       vs_currency: Joi.string().valid(...currency).default("usd"),  
-      order: Joi.string().valid("price_change_percentage_24h_asc", "price_change_percentage_24h_desc").default("price_change_percentage_24h"),
+      order: Joi.string().valid("price_change_percentage_24h_asc", "price_change_percentage_24h_desc","market_cap_asc","market_cap_desc").default("price_change_percentage_24h"),
       per_page: Joi.number().default(1),
       page: Joi.number().default(1)
     })

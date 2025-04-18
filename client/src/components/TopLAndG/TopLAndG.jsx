@@ -1,11 +1,12 @@
 import React from 'react';
 import { useCoinList } from '../../hooks/useCoinList';
+import { Link } from 'react-router-dom';
 // import CoinCard from './CoinCard';
 // import React from 'react';
 
 function CoinCard({ title, data, bgColor, textColor }) {
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', width: '250px', backgroundColor: bgColor }}>
+    <Link to={`/${data.id}`}><div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', width: '250px', backgroundColor: bgColor }}>
       <h3 style={{ color: textColor }}>{title}</h3>
       <p style={{ color: textColor }}><strong>{data.name}</strong> ({data.symbol.toUpperCase()})</p>
       <p style={{ color: textColor }}>Price: ${data.current_price}</p>
@@ -13,7 +14,7 @@ function CoinCard({ title, data, bgColor, textColor }) {
         {data.price_change_percentage_24h > 0 ? '+' : ''}
         {data.price_change_percentage_24h.toFixed(2)}%
       </p>
-    </div>
+    </div></Link>
   );
 }
 
@@ -22,14 +23,14 @@ function CoinCard({ title, data, bgColor, textColor }) {
 function TopLAndG() {
   const { data: topGainer, isLoading: loadingGainer } = useCoinList(
     'usd',
-    'price_change_percentage_24h_desc',
+    'market_cap_desc',
     1,
     1
   );
 
   const { data: topLoser, isLoading: loadingLoser } = useCoinList(
     'usd',
-    'price_change_percentage_24h_asc',
+    'market_cap_asc',
     1,
     1
   );

@@ -53,8 +53,25 @@ const getCoinById = async(req,res)=>{
     
 }
 
+const top_gainers_losers = async(req,res)=>{
+
+  console.log(`${api_url}/top_gainers_losers`, api_key)
+
+    const response = await axios({
+      url:`${api_url}/top_gainers_losers`,
+      method:"get",
+      headers:{
+        "x-cg-demo-api-key": api_key
+      }
+    })
+    await setCache(res.locals.cacheKey, response.data);
+
+    res.json(response.data);  // Send the response to t
+}
+
 module.exports = {
     getMarketData:asyncHandler(getMarketData),
     getCoinMarketChart:asyncHandler(getCoinMarketChart),
-    getCoinById:asyncHandler(getCoinById)
+    getCoinById:asyncHandler(getCoinById),
+    top_gainers_losers:asyncHandler(top_gainers_losers)
 }
